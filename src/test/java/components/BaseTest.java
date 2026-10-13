@@ -1,7 +1,9 @@
 package components;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.Properties;
 
@@ -21,9 +23,21 @@ public class BaseTest {
 	Properties prop ;
 	public WebDriver initializeDriver() throws IOException {
 		prop = new Properties();
-		FileInputStream fis = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\configfile.properties");
-		
-		prop.load(fis);
+		try (InputStream fis = getClass()
+		        .getClassLoader()
+		        .getResourceAsStream("configfile.properties")) {
+
+		    if (fis == null) {
+		        throw new FileNotFoundException(
+		            "configfile.properties not found in test resources"
+		        );
+		    }
+
+		    prop.load(fis);
+		}
+//		FileInputStream fis = new FileInputStream(System.getProperty("user.dir") + "\\src\\test\\resources\\configfile.properties");
+//		
+//		prop.load(fis);
 		String browserName = System.getProperty("browser") != null
 		        ? System.getProperty("browser")
 		        : prop.getProperty("browser");
