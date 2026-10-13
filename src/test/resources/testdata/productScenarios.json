@@ -1,0 +1,23 @@
+[
+  {
+    "searchTerm": "bra",
+    "productKeyword": "Hi-Support No-Sag Plus Size",
+    "expectedProductText": "Hi-Support No-Sag Plus Size",
+    "band": "36",
+    "size": "36 D"
+  },
+  {
+    "searchTerm": "bralette",
+    "productKeyword": "Fungi Brown",
+    "expectedProductText": "Bralette",
+    "band": null,
+    "size": "L"
+  },
+  {
+    "searchTerm": "bralette",
+    "productKeyword": "Fungi Brown",
+    "expectedProductText": "Bralette",
+    "band": null,
+    "size": "XL"
+  }
+]
