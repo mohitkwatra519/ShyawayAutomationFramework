@@ -41,7 +41,7 @@ jobs:
           mvn --batch-mode --no-transfer-progress
           clean test
           -Dbrowser=chrome
-          -Dheadless=true
+          -Dheadless=false
 
       - name: Generate Allure report
         if: ${{ always() }}
