@@ -58,7 +58,7 @@ public class BaseTest {
 		        options.addArguments("--headless=new");
 		    }
 
-		    options.addArguments("--window-size=1440,900");
+		    
 
 		    driver = new ChromeDriver(options);
 		}//full screen
