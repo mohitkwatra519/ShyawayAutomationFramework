@@ -2,15 +2,13 @@
 name: Shyaway E2E Automation
 
 on:
-push:
-branches:
-- main
-
-pull_request:
-branches:
-- main
-
-workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -47,8 +45,7 @@ jobs:
 
       - name: Generate Allure report
         if: ${{ always() }}
-        run: |
-          mvn --batch-mode --no-transfer-progress allure:report
+        run: mvn --batch-mode --no-transfer-progress allure:report
 
       - name: Upload Allure report and test results
         if: ${{ always() }}
