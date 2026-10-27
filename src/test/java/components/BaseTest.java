@@ -78,7 +78,7 @@ public class BaseTest {
 	    }
 		
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
-		driver.manage().window().maximize();
+		//driver.manage().window().maximize();
 		return driver;
 		
 		
