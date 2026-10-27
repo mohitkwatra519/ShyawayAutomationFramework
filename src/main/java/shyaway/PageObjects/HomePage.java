@@ -1,6 +1,8 @@
 package shyaway.PageObjects;
 
 
+import java.io.IOException;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -25,7 +27,7 @@ public class HomePage extends Common {
         driver.get("https://www.shyaway.com/");
     }
 
-	    public void searchProduct(String productName) {
+	    public void searchProduct(String productName) throws IOException {
 	
 	        sendKeys(searchBox, productName);
 	

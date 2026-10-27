@@ -1,10 +1,15 @@
 
 package AbstractComponents;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -30,7 +35,7 @@ public class Common implements ElementActions {
     }
 
     @Override
-    public void sendKeys(By locator, String text) {
+    public void sendKeys(By locator, String text) throws IOException {
     	System.out.println("Current URL: " + driver.getCurrentUrl());
         System.out.println("Page title: " + driver.getTitle());
         System.out.println("Searching with locator: " + locator);
@@ -41,6 +46,13 @@ public class Common implements ElementActions {
         System.out.println("Search box visible: "
                 + driver.findElements(locator).stream()
                     .anyMatch(WebElement::isDisplayed));
+        File screenshot = ((TakesScreenshot) driver)
+                .getScreenshotAs(OutputType.FILE);
+
+        FileUtils.copyFile(
+                screenshot,
+                new File("target/ci-homepage.png")
+        );
         
         WebElement element = wait.until(
             ExpectedConditions.visibilityOfElementLocated(locator)
