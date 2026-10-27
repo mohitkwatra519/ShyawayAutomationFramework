@@ -35,6 +35,13 @@ public class Common implements ElementActions {
         System.out.println("Page title: " + driver.getTitle());
         System.out.println("Searching with locator: " + locator);
     	
+        System.out.println("Search box count: "
+                + driver.findElements(locator).size());
+
+        System.out.println("Search box visible: "
+                + driver.findElements(locator).stream()
+                    .anyMatch(WebElement::isDisplayed));
+        
         WebElement element = wait.until(
             ExpectedConditions.visibilityOfElementLocated(locator)
         );

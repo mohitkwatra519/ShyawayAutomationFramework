@@ -25,11 +25,11 @@ public class HomePage extends Common {
         driver.get("https://www.shyaway.com/");
     }
 
-    public void searchProduct(String productName) {
-
-        sendKeys(searchBox, productName);
-
-        driver.findElement(searchBox).submit();
-    }
+	    public void searchProduct(String productName) {
+	
+	        sendKeys(searchBox, productName);
+	
+	        driver.findElement(searchBox).submit();
+	    }
 
 }
