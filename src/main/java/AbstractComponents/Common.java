@@ -31,6 +31,10 @@ public class Common implements ElementActions {
 
     @Override
     public void sendKeys(By locator, String text) {
+    	System.out.println("Current URL: " + driver.getCurrentUrl());
+        System.out.println("Page title: " + driver.getTitle());
+        System.out.println("Searching with locator: " + locator);
+    	
         WebElement element = wait.until(
             ExpectedConditions.visibilityOfElementLocated(locator)
         );
