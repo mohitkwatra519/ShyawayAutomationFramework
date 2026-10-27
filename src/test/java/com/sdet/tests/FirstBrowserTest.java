@@ -32,12 +32,16 @@ public class FirstBrowserTest extends BaseTest {
 
         HomePage homePage = new HomePage(driver);
 
-        Allure.step("Open Shyaway homepage", () -> homePage.goTo());
+//        Allure.step("Open Shyaway homepage", () -> homePage.goTo());
+        //extentTest.info("Open Shyaway homepage");
+        homePage.goTo();
+        
         String searchTerm = scenario.get("searchTerm");
-        Allure.step(
-        	    "Search product: " + searchTerm,
-        	    () -> homePage.searchProduct(searchTerm)
-        	);
+        homePage.searchProduct(searchTerm);
+//        Allure.step(
+//        	    "Search product: " + searchTerm,
+//        	    () -> homePage.searchProduct(searchTerm)
+//        	);
         String currentUrl = driver.getCurrentUrl();
         System.out.println(currentUrl);
         Assert.assertTrue(
@@ -51,10 +55,11 @@ public class FirstBrowserTest extends BaseTest {
         //resultsPage.selectFirstProduct();
         //resultsPage.selectProductByKeyword("Fungi Brown");
         String productKeyword = scenario.get("productKeyword");
-        Allure.step(
-        	    "Select product: " + productKeyword,
-        	    () -> resultsPage.selectProductByKeyword(productKeyword)
-        	);
+        resultsPage.selectProductByKeyword(productKeyword);
+//        Allure.step(
+//        	    "Select product: " + productKeyword,
+//        	    () -> resultsPage.selectProductByKeyword(productKeyword)
+//        	);
         ProductDetailsPage productPage =
                 new ProductDetailsPage(driver);
 
@@ -114,23 +119,30 @@ public class FirstBrowserTest extends BaseTest {
         if (productPage.hasBandOptions()) {
 
             // Wired bra flow
-        	Allure.step("Select band: " + band,
-        	        () -> productPage.selectBand(band));
-        	Allure.step("Select size: " + expectedSize,
-        		    () -> productPage.selectSize(expectedSize));
-        	//productPage.selectSize(expectedSize);
+        	
+        	
+        	productPage.selectBand(band);
+        	
+        	productPage.selectSize(expectedSize);
+        	
+//        	Allure.step("Select band: " + band,
+//        	        () -> productPage.selectBand(band));
+//        	Allure.step("Select size: " + expectedSize,
+//        		    () -> productPage.selectSize(expectedSize));
+//        	productPage.selectSize(expectedSize);
 
         } else {
 
             // Bralette flow
             productPage.selectSize(expectedSize);
         }
-
-        Allure.step("Add product to cart",
-        	    () -> productPage.addToCart());
-        
-        Allure.step("Proceed to cart",
-        	    () -> productPage.proceedToCart());
+        productPage.addToCart();
+        productPage.proceedToCart();
+//        Allure.step("Add product to cart",
+//        	    () -> productPage.addToCart());
+//        
+//        Allure.step("Proceed to cart",
+//        	    () -> productPage.proceedToCart());
         
         System.out.println("Cart URL: " + driver.getCurrentUrl());
         System.out.println("Cart Page Title: " + driver.getTitle());

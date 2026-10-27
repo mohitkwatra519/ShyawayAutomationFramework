@@ -1,5 +1,6 @@
 package components;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -7,7 +8,10 @@ import java.io.InputStream;
 import java.time.Duration;
 import java.util.Properties;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -80,9 +84,18 @@ public class BaseTest {
 		
 	}
 	
-	public WebDriver getDriver() {
-	    return driver;
+	public String getScreenshot(String testCaseName , WebDriver driver) throws IOException  {
+		TakesScreenshot ts = (TakesScreenshot)driver ; 
+		File src = ts.getScreenshotAs(OutputType.FILE);
+		File dest = new File(System.getProperty("user.dir") + "//reports//" + testCaseName +  ".png");
+		FileUtils.copyFile(src, dest);
+		return System.getProperty("user.dir") + "//reports//" + testCaseName +  ".png" ;
+		
 	}
+	
+//	public WebDriver getDriver() {
+//	    return driver;
+//	}
 	
 	@BeforeMethod
 	public void setUp() throws IOException {
@@ -96,4 +109,6 @@ public class BaseTest {
 	        driver = null;
 	    }
 	}
+	
+	
 }

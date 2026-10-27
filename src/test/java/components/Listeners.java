@@ -1,106 +1,80 @@
 package components;
 
 
-import java.io.ByteArrayInputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Arrays;
+import java.io.IOException;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import components.BaseTest;
-import io.qameta.allure.Allure;
-import io.qameta.allure.AttachmentOptions;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
 
-public class Listeners implements ITestListener {
+import Report.ExtentReportNG;
 
-    @Override
-    public void onTestFailure(ITestResult result) {
 
-        StringBuilder details = new StringBuilder();
 
-        details.append("Test: ")
-               .append(result.getMethod().getMethodName())
-               .append("\n");
 
-        details.append("Parameters: ")
-               .append(Arrays.deepToString(result.getParameters()))
-               .append("\n");
 
-        Throwable error = result.getThrowable();
+public class Listeners extends BaseTest implements ITestListener {
+	ExtentReports extent = ExtentReportNG.getExtentReports();
+	ExtentTest test ;
+	ThreadLocal<ExtentTest> threadlocal = new ThreadLocal<ExtentTest>(); 
+	
+	public void onTestStart(ITestResult result) {
+	    test = extent.createTest(result.getMethod().getMethodName()); // -> TC name
+	    threadlocal.set(test);
+	  }
+	
+	public void onTestSuccess(ITestResult result) {
+		threadlocal.get().log(Status.PASS, "Test Passed");
+	  }
 
-        if (error != null) {
-            details.append("Exception: ")
-                   .append(error.getClass().getName())
-                   .append("\nMessage: ")
-                   .append(error.getMessage())
-                   .append("\n");
+	public void onTestFailure(ITestResult result) {
+		threadlocal.get().fail(result.getThrowable());
+	    try {
+			driver = (WebDriver) result.getTestClass().getRealClass().getField("driver").get(result.getInstance());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	    //Step 1 Take SS
+	  
+		String filePath = null;
+		try {
+			filePath = getScreenshot(result.getMethod().getMethodName() , driver);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	    //Step 2 Attach to report
+		threadlocal.get().addScreenCaptureFromPath(filePath, result.getMethod().getMethodName());
+	  }
 
-            StringWriter stackTrace = new StringWriter();
+	  
+	public void onTestSkipped(ITestResult result) {
+	    
+	  }
 
-            error.printStackTrace(new PrintWriter(stackTrace));
+	  
+	public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+	    
+	  }
 
-            details.append("\nStack trace:\n")
-                   .append(stackTrace);
-        }
+	  
+	public void onTestFailedWithTimeout(ITestResult result) {
+	    onTestFailure(result);
+	  }
 
-        WebDriver driver = null;
+	  
+	public void onStart(ITestContext context) {
+	    
+	  }
 
-        try {
-            Object instance = result.getInstance();
-
-            if (instance instanceof BaseTest) {
-                driver = ((BaseTest) instance).getDriver();
-            }
-
-            if (driver != null) {
-                details.append("\nCurrent URL: ")
-                       .append(driver.getCurrentUrl());
-
-                details.append("\nPage title: ")
-                       .append(driver.getTitle());
-            }
-        } catch (Exception e) {
-            details.append("\nBrowser details unavailable: ")
-                   .append(e.getMessage());
-        }
-
-        // Attach diagnostic details to Allure
-        try {
-            Allure.attachment(
-                "Failure Details",
-                "text/plain",
-                details.toString()
-            );
-        } catch (Exception e) {
-            System.err.println(
-                "Could not attach failure details: " + e.getMessage()
-            );
-        }
-
-        // Capture screenshot before browser teardown
-        if (driver != null && driver instanceof TakesScreenshot) {
-            try {
-                byte[] screenshot =
-                    ((TakesScreenshot) driver)
-                        .getScreenshotAs(OutputType.BYTES);
-
-                Allure.attachment(
-                    "Failure Screenshot",
-                    "image/png",
-                    new ByteArrayInputStream(screenshot),
-                    AttachmentOptions.withFileExtension(".png")
-                );
-
-            } catch (Exception e) {
-                System.err.println(
-                    "Could not capture screenshot: " + e.getMessage()
-                );
-            }
-        }
-    }
+	public void onFinish(ITestContext context) {
+	    extent.flush(); //Without this report won't be generated
+	  }
 }
